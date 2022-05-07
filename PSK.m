@@ -10,25 +10,32 @@ eb = 1;               % energy per bit
 es = eb*log(M);       % energy per symbol
 T = 0.0001;           % symbol duration
 t = 0:1e-6:0.0001;    % time steps
-i = 1; % s_i using phi_i probably have to be created in a loop
-phi = 2*pi.*i/M;
 symbol_length = log2(M); %bits/symbol
 
 % random 1024 bits
 frame = randi([0, 1],1,1024);
 
-%import word to i dictionary
-switch M
-    case 2
-       phaseDict = importdata('SymbolToPhaseM2.txt');
-    case 4
-        phaseDict = importdata('SymbolToPhaseM4.txt');
-    case 8
-        phaseDict = importdata('SymbolToPhaseM8.txt');
+
+%convert frame into binary words
+frame_encoded = [];%bits grouped into symbol_length in i values
+for j = 1:symbol_length:1024
+    
+    word = [];
+    for k = j:1:symbol_length
+        
+        word = [word, frame(k)];
+    
+    end
+    frame_encoded = [frame_encoded,sum(word)+1];
+
 end
+
+
 
 %total signal length = (1024/symbol_length) * 1*10^-4 s
 
+i = 1; % s_i using phi_i probably have to be created in a loop
+phi = 2*pi.*i/M;
 
 final_signal = [];%composite of all symbols
 
