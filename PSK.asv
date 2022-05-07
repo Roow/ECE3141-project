@@ -17,14 +17,13 @@ symbol_length = log2(M); %bits/symbol
 % random 1024 bits
 frame = randi([0, 1],1,1024);
 
-%import word to i dictionary
+phaseDict
 switch M
     case 2
-       phaseDict = importdata('SymbolToPhaseM2.txt');
+       phaseDict importdata('SymbolToPhaseM2.txt')
     case 4
-        phaseDict = importdata('SymbolToPhaseM4.txt');
+
     case 8
-        phaseDict = importdata('SymbolToPhaseM8.txt');
 end
 
 %total signal length = (1024/symbol_length) * 1*10^-4 s
