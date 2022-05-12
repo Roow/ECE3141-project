@@ -12,23 +12,26 @@ switch M
 
     case 4
         
-        for i = 1 : log2(M) : 1024-log2(M)
-            word = 0;
-            for j = i:1:i+log2(M)+1
-                word = word + frame(j);
-            end
-            encodedVector = [encodedVector,sum(word)+1];
+        for i = 1 : 2 : 1024
+            
+            word = [];
+            word = [word,frame(i)];
+            word = [word,frame(i+1)];
+            word_dec = bit2int(word',2);
+            encodedVector = [encodedVector,word_dec+1];
         end
         
 
     case 8
 
-        for i = 1 : log2(M) : 1023-log2(M)
-            word = 0;
-            for j = i:1:i+log2(M)
-                word = word + frame(j);
-            end
-            encodedVector = [encodedVector,sum(word)+1];
+        for i = 1 : 3 : 1023%1023/3 = 341 (drop last bit lol)
+            word = [];
+            word = [word,frame(i)];
+            word = [word,frame(i+1)];
+            word = [word,frame(i+2)];
+            word_dec = bit2int(word',3);
+            word
+            encodedVector = [encodedVector,word_dec+1];
         end
         
 end

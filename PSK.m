@@ -30,6 +30,9 @@ for j = 1:length(frame_encoded)
 
 end
 
+%TODO: find way to make complimentary t signal
+
+
 %transmitted_signal = transmitted_signal * 0.1;
 %{
 %total signal length = (1024/symbol_length) * 1*10^-4 s
