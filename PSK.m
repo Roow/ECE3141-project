@@ -20,6 +20,7 @@ frame_encoded = encoder(frame,M);
 
 
 transmitted_signal = [];%composite of all symbols
+signal_length = [];%total time vector
 for j = 1:length(frame_encoded)
     
     i = frame_encoded(j); % s_i using phi_i 
@@ -28,19 +29,27 @@ for j = 1:length(frame_encoded)
     pskSignal = sqrt(2*es/T)*cos(2*pi*fc.*t - phi);%waveform of one symbol
     transmitted_signal = [transmitted_signal,pskSignal];%adding the symbol to the final output signal
 
+    signal_length = [signal_length, 0+0.0001*(j-1):1e-6:0.0001+0.0001*(j-1);];%append corresponding t vector
+
 end
 
 %TODO: find way to make complimentary t signal
 
 
-%transmitted_signal = transmitted_signal * 0.1;
-%{
+transmitted_signal = transmitted_signal * 0.01;%scale sginal down
+
 %total signal length = (1024/symbol_length) * 1*10^-4 s
-signal_length = []
-for i = 0:1022
-    signal_length = [signal_length, 0+0.0001*i:1e-6:0.0001+0.0001*i;];
-    
-end
-%}
+
+transmitted_signal2 = awgn(transmitted_signal,5);
+
+plot(signal_length,transmitted_signal)
+hold on
+xlim([0 0.0001])
+
+figure(2)
+plot(signal_length,transmitted_signal2)
+hold on
+xlim([0 0.0001])
+
 
 
