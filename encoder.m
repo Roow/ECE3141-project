@@ -1,13 +1,12 @@
 function encodedVector = encoder(frame,M)
 
-%TODO: fix M=4 & M=8 cases
 encodedVector = [];
 switch M
     case 2
         
         for i = 1 : log2(M) : 1024
             word = frame(i);
-            encodedVector = [encodedVector,sum(word)];
+            encodedVector = [encodedVector,sum(word)+1];
         end
 
     case 4
@@ -30,7 +29,6 @@ switch M
             word = [word,frame(i+1)];
             word = [word,frame(i+2)];
             word_dec = bit2int(word',3);
-            word
             encodedVector = [encodedVector,word_dec+1];
         end
         

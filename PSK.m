@@ -4,11 +4,11 @@
 
 %% Constants
 clc; clear all;close all
-M = 2;                % No. of symbols
+M = 8;                % No. of symbols
 fc = 100000;          % carrier frequency
 eb = 1;               % energy per bit
 es = eb*log(M);       % energy per symbol
-T = 0.0001;           % symbol duration
+T = 0.000001;%0.0001;           % symbol duration
 t = 0:1e-6:0.0001;    % time steps
 symbol_length = log2(M); %bits/symbol
 
@@ -33,14 +33,21 @@ for j = 1:length(frame_encoded)
 
 end
 
-%TODO: find way to make complimentary t signal
 
 
-transmitted_signal = transmitted_signal * 0.01;%scale sginal down
+transmitted_signal = transmitted_signal * 0.01;%scale sginalw down
 
 %total signal length = (1024/symbol_length) * 1*10^-4 s
 
-transmitted_signal2 = awgn(transmitted_signal,5);
+transmitted_signal2 = awgn(transmitted_signal,10);
+
+
+SNR = 500;
+txsig = pskmod((frame_encoded-1)',M,pi/M);
+rxsig = awgn(txsig,SNR);
+symbolsReceived = pskdemod(rxsig',M,pi/M);
+symbolErrors = symerr(frame_encoded,symbolsReceived)
+
 
 plot(signal_length,transmitted_signal)
 hold on
@@ -51,5 +58,5 @@ plot(signal_length,transmitted_signal2)
 hold on
 xlim([0 0.0001])
 
-
+scatterplot(rxsig);
 
