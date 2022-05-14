@@ -4,59 +4,67 @@
 
 %% Constants
 clc; clear all;close all
-M = 8;                % No. of symbols
-fc = 100000;          % carrier frequency
-eb = 1;               % energy per bit
-es = eb*log(M);       % energy per symbol
-T = 0.000001;%0.0001;           % symbol duration
-t = 0:1e-6:0.0001;    % time steps
-symbol_length = log2(M); %bits/symbol
+M = 2;                % No. of symbols
+fc = 100000;                  % carrier frequency
+eb = 1;                       % energy per bit
+es = eb*log2(M);              % energy per symbol
+T = 0.0001;                   % symbol duration
+t = linspace(0, T, 1000);     % time vector
+symbol_length = log2(M);      % bits/symbol
+symbol_plot = 4;              % how many symbols to include in PSK plot
 
+
+%% Message frame encoding
 % random 1024 bits
-frame = randi([0, 1],1,1024);
+bit_frame = randi([0, 1],1,1024);
 
 % 1024 bits converted into symbols
-frame_encoded = encoder(frame,M);
+symbol_frame = encoder(bit_frame, M);
 
 
+%% Time domain plot of PSK modulated waveform
 transmitted_signal = [];%composite of all symbols
 signal_length = [];%total time vector
-for j = 1:length(frame_encoded)
+
+% look at only first few symbols
+for j = 1:symbol_plot
     
-    i = frame_encoded(j); % s_i using phi_i 
+    % determine phase of symbol
+    i = symbol_frame(j); % s_i using phi_i 
     phi = 2*pi.*i/M;
 
-    pskSignal = sqrt(2*es/T)*cos(2*pi*fc.*t - phi);%waveform of one symbol
-    transmitted_signal = [transmitted_signal,pskSignal];%adding the symbol to the final output signal
+    % waveform of one symbol
+    pskSignal = sqrt(2*es/T)*cos(2*pi*fc.*t - phi); 
 
-    signal_length = [signal_length, 0+0.0001*(j-1):1e-6:0.0001+0.0001*(j-1);];%append corresponding t vector
-
+    % adding the symbol to the final output signal
+    transmitted_signal = [transmitted_signal, pskSignal]; 
 end
 
-
-
-transmitted_signal = transmitted_signal * 0.01;%scale sginalw down
+%scale signal down
+transmitted_signal = transmitted_signal * 0.01;
 
 %total signal length = (1024/symbol_length) * 1*10^-4 s
 
-transmitted_signal2 = awgn(transmitted_signal,10);
-
-
-SNR = 500;
-txsig = pskmod((frame_encoded-1)',M,pi/M);
-rxsig = awgn(txsig,SNR);
-symbolsReceived = pskdemod(rxsig',M,pi/M);
-symbolErrors = symerr(frame_encoded,symbolsReceived)
-
-
+signal_length = linspace(0, symbol_plot*T, 1000*symbol_plot);
 plot(signal_length,transmitted_signal)
 hold on
-xlim([0 0.0001])
+xlim([0 symbol_plot*T])
 
+
+%% Error probability
+% adding noise
+SNR = 20;
+
+transmitted_signal2 = awgn(transmitted_signal,SNR);
 figure(2)
 plot(signal_length,transmitted_signal2)
 hold on
-xlim([0 0.0001])
+xlim([0 symbol_plot*T])
+
+txsig = pskmod((symbol_frame-1)',M,pi/M);
+rxsig = awgn(txsig,SNR);
+symbolsReceived = pskdemod(rxsig',M,pi/M);
+symbolErrors = symerr(symbol_frame,symbolsReceived);
 
 scatterplot(rxsig);
 
