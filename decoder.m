@@ -1,8 +1,8 @@
 function decodedVector = decoder(Symbolframe,M)
 
 decodedVector = [];
-for i = 1: length(Symbolframe)
-    decodedVector = [decodedVector;int2bit(Symbolframe(i),log2(M))];
+for l = 1: length(Symbolframe)
+    decodedVector = [decodedVector;int2bit(Symbolframe(l),log2(M))];
 end
 decodedVector = decodedVector';
 if M == 8

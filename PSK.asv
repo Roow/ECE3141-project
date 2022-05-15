@@ -111,13 +111,10 @@ for M = [2 4 8]
     switch M 
         case 2
             symbol_frame = symbol_frame_2;
-            bit_frame = bit_frame_2;
         case 4
             symbol_frame = symbol_frame_4;
-            bit_frame = bit_frame_4;
         case 8
             symbol_frame = symbol_frame_8;
-            bit_frame = bit_frame_8;
     end
     
 
@@ -147,9 +144,6 @@ for M = [2 4 8]
     fprintf(formatSpec,symbolErrors,length(symbol_frame))
 
     formatSpec = '%4.0f bit errors out of 1024 bits sent\n';
-    if M == 8
-        formatSpec = '%4.0f bit errors out of 1023 bits sent\n';
-    end
     fprintf(formatSpec,bitErrors)
 
     %(bit/s)/Hz
