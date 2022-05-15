@@ -96,7 +96,7 @@ title('Error probability vs Eb/N0 for various PSK modulation schemes')
 
 %% Error probability
 % adding noise
-SNR = 500;
+SNR = 9;
 
 transmitted_signal2 = awgn(transmitted_signal,SNR);
 figure(2)
@@ -153,9 +153,11 @@ for M = [2 4 8]
     fprintf(formatSpec,bitErrors)
 
     %(bit/s)/Hz
-    SpectralEff = (log2(M)/T) / fc;
-    formatSpec = ' Spectral efficiency for M = %1.0f : %2.4f (bit/s)/Hz \n';
-    fprintf(formatSpec,M,SpectralEff)
+    SpectralEff = log2(M);
+    bitRate = (log2(M)/T) / fc;
+
+    formatSpec = ' Spectral efficiency for M = %1.0f : %2.1f (bit/s)/Hz \n Current bitrate of: %4.2f bits/s\n';
+    fprintf(formatSpec,M,SpectralEff,bitRate*fc)
     formatSpec = '\n\n';
     fprintf(formatSpec)
 
